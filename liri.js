@@ -47,9 +47,9 @@ if (process.argv.length > 2) {
     });
 }
 
-function doTwitter() {
-    client.get('search/tweets', { q: '@thehill' }, function (error, tweets, response) {
-        console.log(tweets);
+function doTwitter(searchString) {
+    client.get('statuses/user_timeline', { screen_name: searchString }, function (error, tweets, response) {
+        console.log(JSON.stringify(tweets, null, 4));
     });
 } // end doTwitter
 
@@ -59,7 +59,7 @@ function doSpotify(searchString) {
             return console.log('Error occurred: ' + err);
         }
 
-        console.log(data);
+        console.log(JSON.stringify(data, null, 4));
     });
 } // end doSpotify
 
@@ -80,6 +80,6 @@ function doOMDB(searchString) {
 
 } // end doOMDB
 
-// doTwitter();
-// doSpotify('Delicate');
+doTwitter('theHill');
+// doSpotify('The Sign');
 // doOMDB('Wonder Woman');

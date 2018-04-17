@@ -12,5 +12,6 @@ spotify.search({ type: 'track', query: 'All the Small Things' }, function(err, d
       return console.log('Error occurred: ' + err);
     }
    
-  console.log(data); 
+  // console.log(data); 
+  console.log(JSON.stringify(data, null, 4)); 
   });
