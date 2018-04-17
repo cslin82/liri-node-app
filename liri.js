@@ -60,6 +60,8 @@ function doSpotify(searchString) {
         }
 
         console.log(JSON.stringify(data, null, 4));
+        // console.log(JSON.stringify(data.tracks.items[0], null, 4));
+
     });
 } // end doSpotify
 
@@ -80,6 +82,16 @@ function doOMDB(searchString) {
 
 } // end doOMDB
 
-doTwitter('theHill');
+const commandMap = {
+    "my-tweets": doTwitter,
+    "spotify-this-song": doSpotify,
+    "movie-this": doOMDB,
+}
+
+console.log(commandMap[argAction](myArgs));
+
+
+
+// doTwitter('theHill');
 // doSpotify('The Sign');
 // doOMDB('Wonder Woman');
