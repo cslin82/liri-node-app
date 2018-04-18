@@ -19,6 +19,10 @@ const fs = require("fs");
 function doTwitter(searchString) {
     client.get('statuses/user_timeline', { screen_name: searchString }, function (error, tweets, response) {
         console.log(JSON.stringify(tweets, null, 4));
+        fs.writeFile('twitter.txt', JSON.stringify(tweets, null, 4), (err) => {
+            if (err) throw err;
+            console.log('The file has been saved!');
+          });
     });
 } // end doTwitter
 
@@ -30,7 +34,10 @@ function doSpotify(searchString) {
 
         // console.log(JSON.stringify(data, null, 4));
         console.log(JSON.stringify(data.tracks.items[0], null, 4));
-
+        fs.writeFile('spotify.txt', JSON.stringify(data, null, 4), (err) => {
+            if (err) throw err;
+            console.log('The file has been saved!');
+          });
     });
 } // end doSpotify
 
@@ -44,6 +51,10 @@ function doOMDB(searchString) {
         if (!error && response.statusCode === 200) {
 
             console.log(JSON.parse(body));
+            fs.writeFile('omdb.txt', JSON.stringify((JSON.parse(body)), null, 4) , (err) => {
+                if (err) throw err;
+                console.log('The file has been saved!');
+              });
         }
     });
 
@@ -64,7 +75,7 @@ const commandMap = {
     }
 }
 
-console.log(Object.keys(commandMap));
+// console.log(Object.keys(commandMap));
 
 
 // Get command-line arguments, if any
