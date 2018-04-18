@@ -5,8 +5,6 @@ const keys = require("./keys");
 var Spotify = require('node-spotify-api');
 var spotify = new Spotify(keys.spotify);
 
-
-
 // parts for OMDB
 const omdbAPIkey = 'ee5d6008';
 const request = require("request");
@@ -17,35 +15,6 @@ var client = new Twitter(keys.twitter);
 
 // fs
 const fs = require("fs");
-
-// Get command-line arguments, if any
-
-if (process.argv.length > 2) {
-    var [, , ...myArgs] = process.argv;
-    var argAction = myArgs.shift();
-    myArgs = myArgs.join(' ');
-    console.log(`action is ${argAction} and target is ${myArgs}`);
-} else {
-    fs.readFile("random.txt", "utf8", function (error, data) {
-
-        // If the code experiences any errors it will log the error to the console.
-        if (error) {
-            return console.log(error);
-        }
-
-        // We will then print the contents of data
-        console.log(data);
-
-        // Then split it by commas (to make it more readable)
-        var dataArr = data.split(",");
-
-        // We will then re-display the content as an array for later use.
-        console.log(dataArr);
-        [argAction, myArgs] = dataArr;
-        console.log(`action is ${argAction} and target is ${myArgs}`);
-
-    });
-}
 
 function doTwitter(searchString) {
     client.get('statuses/user_timeline', { screen_name: searchString }, function (error, tweets, response) {
@@ -97,16 +66,50 @@ const commandMap = {
 
 console.log(Object.keys(commandMap));
 
-if (myArgs === '') { 
-    console.log('no selection');
 
-    myArgs = commandMap[argAction].default;
-    console.log('now searching by default', myArgs);
-    
+// Get command-line arguments, if any
+
+if (process.argv.length > 2) {
+    var [, , ...myArgs] = process.argv;
+    var argAction = myArgs.shift();
+    myArgs = myArgs.join(' ');
+    console.log(`action is ${argAction} and target is ${myArgs}`);
+
+    if ( Object.keys(commandMap).indexOf(argAction) === -1 ) {
+        return console.log("valid commands are " + Object.keys(commandMap).join(', '));
+        
+    }
+
+    if (myArgs === '') { 
+        console.log('no selection');
+        myArgs = commandMap[argAction].default;
+        console.log('now searching by default', myArgs);
+    } 
+
+    console.log(commandMap[argAction].handler(myArgs));
+
+} else {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+
+        // If the code experiences any errors it will log the error to the console.
+        if (error) {
+            return console.log(error);
+        }
+
+        // We will then print the contents of data
+        console.log(data);
+
+        // Then split it by commas (to make it more readable)
+        var dataArr = data.split(",");
+
+        // We will then re-display the content as an array for later use.
+        console.log(dataArr);
+        [argAction, myArgs] = dataArr;
+        console.log(`action is ${argAction} and target is ${myArgs}`);
+        console.log(commandMap[argAction].handler(myArgs));
+
+    });
 }
-
-
-console.log(commandMap[argAction].handler(myArgs));
 
 
 
