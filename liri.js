@@ -16,18 +16,29 @@ var client = new Twitter(keys.twitter);
 // fs
 const fs = require("fs");
 
+// moment
+var moment = require('moment');
+
 function doTwitter(searchString) {
     client.get('statuses/user_timeline', { screen_name: searchString }, function (error, tweets, response) {
-        console.log(JSON.stringify(tweets, null, 4));
+        // console.log(JSON.stringify(tweets, null, 4));
 
+
+        tweets.forEach(thisTweet => {
+            var tweetTime = moment(thisTweet.created_at, "ddd MMM D HH:mm:ss ZZ YYYY");
+            console.log(`${thisTweet.user.name} (@${thisTweet.user.screen_name}) ${tweetTime.calendar()}`);
+            console.log(thisTweet.text);
+            console.log('----------------------------------------------------------------------');
+
+        });
         // var tweetTime = moment('Wed May 28 05:51:51 +0000 2014', "ddd MMM D HH:mm:ss ZZ YYYY");
-
 
         // fs.writeFile('twitter.json', JSON.stringify(tweets, null, 4), (err) => {
         //     if (err) throw err;
         //     console.log('Twitter JSON dump has been saved!');
         // });
-    });
+
+    }); // end client.get()
 } // end doTwitter
 
 function doSpotify(searchString) {
@@ -72,7 +83,7 @@ function doOMDB(searchString) {
             // });
             console.log('----------------------------------------------------------------------');
         }
-    });
+    }); /// end request()
 
 } // end doOMDB
 
