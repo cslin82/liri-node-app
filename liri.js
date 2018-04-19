@@ -19,10 +19,14 @@ const fs = require("fs");
 function doTwitter(searchString) {
     client.get('statuses/user_timeline', { screen_name: searchString }, function (error, tweets, response) {
         console.log(JSON.stringify(tweets, null, 4));
-        fs.writeFile('twitter.txt', JSON.stringify(tweets, null, 4), (err) => {
-            if (err) throw err;
-            console.log('The file has been saved!');
-          });
+
+        // var tweetTime = moment('Wed May 28 05:51:51 +0000 2014', "ddd MMM D HH:mm:ss ZZ YYYY");
+
+
+        // fs.writeFile('twitter.json', JSON.stringify(tweets, null, 4), (err) => {
+        //     if (err) throw err;
+        //     console.log('Twitter JSON dump has been saved!');
+        // });
     });
 } // end doTwitter
 
@@ -34,27 +38,39 @@ function doSpotify(searchString) {
 
         // console.log(JSON.stringify(data, null, 4));
         console.log(JSON.stringify(data.tracks.items[0], null, 4));
-        fs.writeFile('spotify.txt', JSON.stringify(data, null, 4), (err) => {
+        fs.writeFile('spotify.json', JSON.stringify(data, null, 4), (err) => {
             if (err) throw err;
-            console.log('The file has been saved!');
-          });
+            console.log('Spotify JSON dump has been saved!');
+        });
     });
 } // end doSpotify
 
 function doOMDB(searchString) {
     var reqURL = `http://www.omdbapi.com/?apikey=${omdbAPIkey}&t=${searchString}`
-    console.log(reqURL);
+    // console.log(reqURL);
+    console.log('----------------------------------------------------------------------');
+
 
     request(reqURL, function (error, response, body) {
 
         // If the request is successful (i.e. if the response status code is 200)
         if (!error && response.statusCode === 200) {
 
-            console.log(JSON.parse(body));
-            fs.writeFile('omdb.txt', JSON.stringify((JSON.parse(body)), null, 4) , (err) => {
-                if (err) throw err;
-                console.log('The file has been saved!');
-              });
+            // console.log(JSON.parse(body));
+
+            var objOMDB = JSON.parse(body);
+
+            ["Title", "Year", "Country", "Language", "Plot", "Actors"].forEach(element => {
+                console.log(element + ': ' + objOMDB[element]);
+            });
+            console.log(objOMDB.Ratings[0].Source + ' rating: ' + objOMDB.Ratings[0].Value);
+            console.log(objOMDB.Ratings[1].Source + ' rating: ' + objOMDB.Ratings[1].Value);
+
+            // fs.writeFile('omdb.json', JSON.stringify((JSON.parse(body)), null, 4), (err) => {
+            //     if (err) throw err;
+            //     console.log('OMDB JSON dump has been saved!');
+            // });
+            console.log('----------------------------------------------------------------------');
         }
     });
 
@@ -64,7 +80,7 @@ const commandMap = {
     "my-tweets": {
         "handler": doTwitter,
         "default": "twitter"
-        },
+    },
     "spotify-this-song": {
         "handler": doSpotify,
         "default": "The Sign"
@@ -86,18 +102,18 @@ if (process.argv.length > 2) {
     myArgs = myArgs.join(' ');
     console.log(`action is ${argAction} and target is ${myArgs}`);
 
-    if ( Object.keys(commandMap).indexOf(argAction) === -1 ) {
+
+    if (Object.keys(commandMap).indexOf(argAction) === -1) {
         return console.log("valid commands are " + Object.keys(commandMap).join(', '));
-        
     }
 
-    if (myArgs === '') { 
+    if (myArgs === '') {
         console.log('no selection');
         myArgs = commandMap[argAction].default;
         console.log('now searching by default', myArgs);
-    } 
+    }
 
-    console.log(commandMap[argAction].handler(myArgs));
+    commandMap[argAction].handler(myArgs);
 
 } else {
     fs.readFile("random.txt", "utf8", function (error, data) {
@@ -121,9 +137,3 @@ if (process.argv.length > 2) {
 
     });
 }
-
-
-
-// doTwitter('theHill');
-// doSpotify('The Sign');
-// doOMDB('Wonder Woman');
