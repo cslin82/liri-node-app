@@ -47,12 +47,24 @@ function doSpotify(searchString) {
             return console.log('Error occurred: ' + err);
         }
 
-        // console.log(JSON.stringify(data, null, 4));
-        console.log(JSON.stringify(data.tracks.items[0], null, 4));
-        fs.writeFile('spotify.json', JSON.stringify(data, null, 4), (err) => {
-            if (err) throw err;
-            console.log('Spotify JSON dump has been saved!');
+        data.tracks.items.forEach(element => {
+            // console.log(objSpotify.tracks.items[0]);
+            console.log('(' + element.popularity + ') "' + element.name + '" from album ' + element.album.name + " by:");
+            element.artists.forEach(artist => {
+                console.log(artist.name);
+            });
+            if (element.preview_url !== null) {
+                console.log('preview link: ' + element.preview_url);
+            }
+            console.log('-----');
         });
+
+        // console.log(JSON.stringify(data, null, 4));
+        // console.log(JSON.stringify(data.tracks.items[0], null, 4));
+        // fs.writeFile('spotify.json', JSON.stringify(data, null, 4), (err) => {
+        //     if (err) throw err;
+        //     console.log('Spotify JSON dump has been saved!');
+        // });
     });
 } // end doSpotify
 
