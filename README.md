@@ -1,5 +1,4 @@
-# liri-node-app
-LIRI Bot HW 10
+# LIRI CLI assistant
 
 This node command-line app takes in parameters and gives output in response:
 
