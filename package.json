@@ -18,10 +18,10 @@
   },
   "homepage": "https://github.com/cslin82/liri-node-app#readme",
   "dependencies": {
-    "dotenv": "^5.0.1",
+    "dotenv": "^6.0.0",
     "moment": "^2.22.2",
     "node-spotify-api": "^1.0.7",
-    "request": "^2.87.0",
+    "request": "^2.88.0",
     "twitter": "^1.7.1"
   }
 }
